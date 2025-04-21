@@ -1,0 +1,55 @@
+<div class="container container-top-config">
+  <form [formGroup]="form" (ngSubmit)="registrarNovoUsuario()" class="full-form-container">
+    <h2 class="card-title">Realize o seu registro</h2>
+    <mat-card class="card-container">
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Código de acesso</mat-label>
+          <input matInput formControlName="codigo" />
+          <c-control-error [control]="form.get('codigo')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome" />
+          <c-control-error [control]="form.get('nome')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Sobrenome</mat-label>
+          <input matInput formControlName="sobrenome" />
+          <c-control-error [control]="form.get('sobrenome')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput formControlName="dataNascimento" type="date" />
+          <c-control-error [control]="form.get('dataNascimento')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+          <c-control-error [control]="form.get('email')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Senha</mat-label>
+          <input type="password" matInput formControlName="senha" />
+          <c-control-error [control]="form.get('senha')"></c-control-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Confirme sua senha</mat-label>
+          <input type="password" matInput formControlName="confirmaSenha" />
+          <c-control-error [control]="form.get('confirmaSenha')"></c-control-error>
+        </mat-form-field>
+
+        <mat-card-actions class="card-actions">
+          <button mat-flat-button type="submit" class="btn btn-outline-primary">Registrar</button>
+          <button mat-flat-button [routerLink]="['/login']" class="btn btn-outline-secondary">Login</button>
+        </mat-card-actions>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>
