@@ -64,7 +64,7 @@ export class TarefaViewComponent implements AfterViewInit {
   }
 
   formatDate(arg0: any) {
-    let data = (new Date(arg0).getDate() + 1) + '/' + (new Date(arg0).getMonth() + 1) + '/' + new Date(arg0).getFullYear();
-    return data;
+    const full_date = new Date(arg0).toLocaleDateString("pt-BR");
+    return full_date;
   }
 }
