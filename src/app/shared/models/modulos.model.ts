@@ -46,7 +46,7 @@ export class Modulo {
       title: 'Políticas e Acessos',
       icon: 'tune', // ou 'fa-solid fa-sliders'
       description: 'Gerencie as políticas de acesso do sistema.',
-      route: '/atron/politicas-e-acessos',
+      route: '/atron/politicas',
     }]
   }
 }

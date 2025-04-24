@@ -50,7 +50,6 @@ export class SalarioEditComponent implements OnInit {
 
         setTimeout(() => this.salarioFormComponent.desabilitarUsuarioSelect());
       });
-
     }
   }
 

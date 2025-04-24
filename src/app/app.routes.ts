@@ -19,6 +19,7 @@ export const routes: Routes = [
       { path: 'usuarios', loadChildren: () => import('./features/usuarios/usuario-routing.module').then(m => m.UsuarioRoutingModule) },
       { path: 'tarefas', loadChildren: () => import('./features/tarefas/tarefa-routing.module').then(m => m.TarefaRoutingModule) },
       { path: 'salarios', loadChildren: () => import('./features/salarios/salario-routing.module').then(m => m.SalarioRoutingModule) },
+      { path: 'perfil-de-acesso', loadChildren: () => import('./features/perfil-de-acesso/perfil-de-acesso.module').then(m => m.PerfilModule) },
     ]
   },
 

@@ -90,10 +90,10 @@ export class DashboardComponent implements OnInit {
       },
       {
         code: 'PAC',
-        title: 'Políticas e Acessos',
+        title: 'Perfil de Acessos',
         icon: 'tune', // ou 'fa-solid fa-sliders'
-        description: 'Gerencie as políticas de acesso do sistema.',
-        route: '/atron/politicas-e-acessos',
+        description: 'Gerencie os perfis de acesso do sistema.',
+        route: '/atron/perfil-de-acesso',
         cols: 1,
         rows: 1
       }

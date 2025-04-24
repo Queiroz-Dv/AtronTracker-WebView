@@ -3,7 +3,6 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TarefaService } from '../../services/tarefa.service';
-import { EstadoTarefa } from '../../models/estadoTarefa.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../shared/modules/shared.module';
 import { TarefaViewData } from '../../models/tarefa-view-data.model';
