@@ -7,6 +7,7 @@ import { UsuarioService } from '../../services/usuario.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { formatLabel } from '../../../../shared/utils/formatar-label.util';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
+import { MatSort } from '@angular/material/sort';
 
 class UsuarioViewData {
   codigoOriginal: string;
@@ -22,7 +23,7 @@ class UsuarioViewData {
 })
 export class UsuarioViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatTable) table!: MatTable<UsuarioViewData>;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<UsuarioViewData>();
   route = inject(ActivatedRoute);
   colunas = ['codigo', 'cargo', 'departamento', 'acoes'];
@@ -33,6 +34,14 @@ export class UsuarioViewComponent implements AfterViewInit {
     this.carregar();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
   carregar() {
     this.service.obterTodosUsuariosInformados().subscribe(usuarios => {
 
@@ -45,7 +54,7 @@ export class UsuarioViewComponent implements AfterViewInit {
 
       this.dataSource = new MatTableDataSource(usuarioViewData);
       this.dataSource.paginator = this.paginator;
-      this.table.dataSource = this.dataSource;
+      this.dataSource.sort = this.sort;
     })
   }
 

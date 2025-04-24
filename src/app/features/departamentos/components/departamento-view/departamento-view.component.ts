@@ -23,8 +23,7 @@ export class DepartamentoViewComponent implements AfterViewInit {
   route = inject(ActivatedRoute);
   colunas = ['codigo', 'descricao', 'acoes'];
 
-  constructor(private service: DepartamentosService, public router: Router) {
-  }
+  constructor(private service: DepartamentosService, public router: Router) { }
 
   ngAfterViewInit() {
     this.carregar();

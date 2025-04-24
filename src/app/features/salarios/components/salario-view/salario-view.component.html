@@ -6,28 +6,29 @@
       </button>
     </div>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="usuario">
-        <th mat-header-cell *matHeaderCellDef>Usuário</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="usuarioDescricao">Usuário</th>
         <td mat-cell *matCellDef="let slr">{{ slr.usuarioDescricao }}</td>
       </ng-container>
 
       <ng-container matColumnDef="cargo">
-        <th mat-header-cell *matHeaderCellDef>Cargo</th>
-        <td mat-cell *matCellDef="let slr">
-          {{ slr.cargoDescricao }}
-        </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="cargoDescricao">Cargo</th>
+        <td mat-cell *matCellDef="let slr"> {{ slr.cargoDescricao }} </td>
       </ng-container>
 
       <ng-container matColumnDef="departamento">
-        <th mat-header-cell *matHeaderCellDef>Departamento</th>
-        <td mat-cell *matCellDef="let slr">
-          {{ slr.departamentoDescricao}}
-        </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="departamentoDescricao">Departamento</th>
+        <td mat-cell *matCellDef="let slr"> {{ slr.departamentoDescricao}} </td>
       </ng-container>
 
       <ng-container matColumnDef="salario">
-        <th mat-header-cell *matHeaderCellDef>Salário</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="salarioMensal">Salário</th>
         <td mat-cell *matCellDef="let slr">{{ slr.salarioMensal }}</td>
       </ng-container>
 

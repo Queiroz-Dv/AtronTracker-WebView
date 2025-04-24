@@ -9,6 +9,7 @@ import { SharedModule } from '../../../../shared/modules/shared.module';
 import { Departamento } from '../../../departamentos/models/departamento.model';
 import { CargoModel } from '../../models/cargo.model';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'c-cargos-view',
@@ -17,28 +18,34 @@ import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao
 })
 export class CargosViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatTable) table!: MatTable<CargoModel>;
-  dataSource = new MatTableDataSource<CargoModel>([]);
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<CargoModel>;
+
   route = inject(ActivatedRoute);
   departamentos: Departamento[] = [];
   colunas = ['codigo', 'descricao', 'departamento', 'acoes'];
 
   constructor(private cargoService: CargoService,
-    private departamentoService: DepartamentosService,
     public router: Router) { }
 
   ngAfterViewInit(): void {
-    this.departamentoService.obterTodos().subscribe(deps => {
-      this.departamentos = deps;
-      this.carregar();
-    });
+    this.carregar();
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   carregar() {
     this.cargoService.obterTodos().subscribe(crg => {
       this.dataSource = new MatTableDataSource(crg);
       this.dataSource.paginator = this.paginator;
-      this.table.dataSource = this.dataSource;
+      this.dataSource.sort = this.sort;
     });
   }
 

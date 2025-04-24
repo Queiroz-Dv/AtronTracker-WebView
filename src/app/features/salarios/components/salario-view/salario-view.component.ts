@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { SharedModule } from '../../../../shared/modules/shared.module';
 import { SalarioViewData } from '../../models/salario-view-data.model';
 import { formatLabel } from '../../../../shared/utils/formatar-label.util';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'c-salario-view',
@@ -15,10 +16,11 @@ import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao
   imports: [ReactiveFormsModule, SharedModule, BotaoVoltarComponent],
 })
 
-export class SalarioViewComponent implements OnInit {
+export class SalarioViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatTable) table!: MatTable<SalarioViewData>;
-  dataSource = new MatTableDataSource<SalarioViewData>([]);
+  @ViewChild(MatSort) sort!: MatSort;
+
+  dataSource: MatTableDataSource<SalarioViewData>;
   route = inject(ActivatedRoute);
 
   colunas = ['usuario', 'cargo', 'departamento', 'salario', 'acoes'];
@@ -27,7 +29,7 @@ export class SalarioViewComponent implements OnInit {
     private service: SalarioService,
     public router: Router) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.carregar();
   }
 
@@ -43,8 +45,17 @@ export class SalarioViewComponent implements OnInit {
 
       this.dataSource = new MatTableDataSource(salariosViewData);
       this.dataSource.paginator = this.paginator;
-      this.table.dataSource = this.dataSource;
+      this.dataSource.sort = this.sort;
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   editar(id: number): void {

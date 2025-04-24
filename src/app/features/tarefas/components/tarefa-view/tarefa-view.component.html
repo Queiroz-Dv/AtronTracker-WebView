@@ -6,43 +6,44 @@
       </button>
     </div>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="usuario">
-        <th mat-header-cell *matHeaderCellDef>Usuário</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="nomeDoUsuario">Usuário</th>
         <td mat-cell *matCellDef="let trf">{{ trf.nomeDoUsuario }}</td>
       </ng-container>
 
       <ng-container matColumnDef="titulo">
-        <th mat-header-cell *matHeaderCellDef>Título</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="titulo">Título</th>
         <td mat-cell *matCellDef="let trf">{{ trf.titulo }}</td>
       </ng-container>
 
       <ng-container matColumnDef="cargo">
-        <th mat-header-cell *matHeaderCellDef>Cargo</th>
-        <td mat-cell *matCellDef="let trf">
-          {{ trf.cargoDescricao }}
-        </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="cargoDescricao">Cargo</th>
+        <td mat-cell *matCellDef="let trf"> {{ trf.cargoDescricao }} </td>
       </ng-container>
 
       <ng-container matColumnDef="departamento">
-        <th mat-header-cell *matHeaderCellDef>Departamento</th>
-        <td mat-cell *matCellDef="let trf">
-          {{ trf.departamentoDescricao}}
-        </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="departamentoDescricao">Departamento</th>
+        <td mat-cell *matCellDef="let trf"> {{ trf.departamentoDescricao}} </td>
       </ng-container>
 
       <ng-container matColumnDef="dataInicial">
-        <th mat-header-cell *matHeaderCellDef>Data Inicial</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Inicial</th>
         <td mat-cell *matCellDef="let trf">{{ formatDate(trf.dataInicial) }}</td>
       </ng-container>
 
       <ng-container matColumnDef="dataFinal">
-        <th mat-header-cell *matHeaderCellDef>Data Final</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Final</th>
         <td mat-cell *matCellDef="let trf">{{ formatDate(trf.dataFinal) }}</td>
       </ng-container>
 
       <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="descricaoDoEstadoDaTarefa">Estado</th>
         <td mat-cell *matCellDef="let trf">{{ trf.descricaoDoEstadoDaTarefa }}</td>
       </ng-container>
 

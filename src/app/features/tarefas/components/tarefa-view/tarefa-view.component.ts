@@ -8,6 +8,7 @@ import { SharedModule } from '../../../../shared/modules/shared.module';
 import { TarefaViewData } from '../../models/tarefa-view-data.model';
 import { formatLabel } from '../../../../shared/utils/formatar-label.util';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'c-tarefa-view',
@@ -17,8 +18,9 @@ import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao
 
 export class TarefaViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatTable) table!: MatTable<TarefaViewData>;
-  dataSource = new MatTableDataSource<TarefaViewData>();
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<TarefaViewData>;
+
   route = inject(ActivatedRoute);
   colunas = [
     'usuario',
@@ -32,9 +34,9 @@ export class TarefaViewComponent implements AfterViewInit {
 
   constructor(private service: TarefaService, public router: Router) { }
 
-  ngAfterViewInit(): void { this.carregar(); }
+  ngAfterViewInit() { this.carregar(); }
 
-  carregar(): void {
+  carregar() {
     this.service.obterTodasTarefasRelacionadas().subscribe(tarefas => {
       const tarefaViewData = tarefas.map(trf => ({
         id: trf.id,
@@ -49,7 +51,7 @@ export class TarefaViewComponent implements AfterViewInit {
 
       this.dataSource = new MatTableDataSource(tarefaViewData);
       this.dataSource.paginator = this.paginator;
-      this.table.dataSource = this.dataSource;
+      this.dataSource.sort = this.sort;
     });
   }
 
@@ -60,6 +62,15 @@ export class TarefaViewComponent implements AfterViewInit {
   excluir(id: number): void {
     if (confirm('Deseja realmente excluir?')) {
       this.service.deletar(id).subscribe(() => this.carregar());
+    }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
