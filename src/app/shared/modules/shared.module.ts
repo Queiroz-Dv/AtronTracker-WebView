@@ -15,10 +15,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [],
   imports: [
+    MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     MatSelectModule,
@@ -34,10 +36,11 @@ import { MatTableModule } from '@angular/material/table';
     MatListModule,
     MatIconModule,
     MatInputModule,
-    MatCardModule,  
+    MatCardModule,
     MatError
   ],
   exports: [
+    MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     MatSelectModule,
@@ -53,7 +56,7 @@ import { MatTableModule } from '@angular/material/table';
     MatListModule,
     MatIconModule,
     MatInputModule,
-    MatCardModule,  
+    MatCardModule,
     MatError
   ]
 })
