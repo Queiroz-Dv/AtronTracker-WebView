@@ -8,6 +8,8 @@ import { MaterialContainerModule } from '../../material-container.module';
 import { SharedModule } from '../../shared/modules/shared.module';
 import { AcessoService } from '../acesso/login/services/acesso.service';
 import { VisualizacaoService } from '../../core/services/visualizacao-service';
+import { ModuloService } from '../modulos/services/modulo.service';
+import { ModuloItem } from '../../shared/utils/modulo-functions.util';
 
 @Component({
   standalone: true,
@@ -17,16 +19,32 @@ import { VisualizacaoService } from '../../core/services/visualizacao-service';
   imports: [MaterialContainerModule, SharedModule, RouterModule]
 })
 export class DashboardComponent implements OnInit {
-
-  constructor(private router: Router, private acessoService: AcessoService, private visualizacaoService: VisualizacaoService) { }
+  constructor(private router: Router, private moduloService: ModuloService, private acessoService: AcessoService, private visualizacaoService: VisualizacaoService) { }
 
   ngOnInit() {
-    this.setCardsForView()
+    this.moduloService.obterTodos().subscribe(modulos => {
+      const modulosAcessiveis = this.acessoService.getModulosAcessiveisDoUsuario();
+      this.cardsView = modulos
+        .filter(modulo => modulosAcessiveis.includes(modulo.codigo)) // Filter only accessible modules
+        .map(modulo => {
+          const moduloItem = new ModuloItem(modulo.codigo);
+          return {
+            code: modulo.codigo,
+            title: modulo.descricao,
+            icon: moduloItem.icone || 'default-icon', // Use utility function for icon
+            description: moduloItem.descricao || 'Descrição não disponível', // Provide a default description
+            route: moduloItem.rota, // Use utility function for route
+            cols: 1,
+            rows: 1
+          };
+        });
+    });
   }
 
   navigate(route: string) {
     this.router.navigateByUrl(route);
   }
+
   private breakpointObserver = inject(BreakpointObserver);
 
   cardsView: DashboardCard[] = [];
@@ -42,66 +60,7 @@ export class DashboardComponent implements OnInit {
   );
 
   private getCards(isHandset: boolean): DashboardCard[] {
-    const baseCards: DashboardCard[] = [
-      {
-        code: 'DPT',
-        title: 'Departamentos',
-        icon: 'business', // ou 'fa-solid fa-building'
-        description: 'Gerencie os departamentos da empresa.',
-        route: '/atron/departamentos',
-        cols: 1,
-        rows: 1
-      },
-      {
-        code: 'CRG',
-        title: 'Cargos',
-        icon: 'work', // ou 'fa-solid fa-briefcase'
-        description: 'Gerencie os cargos da empresa.',
-        route: '/atron/cargos',
-        cols: 1,
-        rows: 1
-      },
-      {
-        code: 'USR',
-        title: 'Usuários',
-        icon: 'group', // ou 'fa-solid fa-users'
-        description: 'Gerencie os colaboradores da empresa.',
-        route: '/atron/usuarios',
-        cols: 1,
-        rows: 1
-      },
-      {
-        code: 'TAR',
-        title: 'Tarefas',
-        icon: 'checklist', // ou 'fa-solid fa-list-check'
-        description: 'Gerencie as tarefas da empresa.',
-        route: '/atron/tarefas',
-        cols: isHandset ? 1 : 1,
-        rows: isHandset ? 1 : 1
-      },
-      {
-        code: 'SAL',
-        title: 'Salários',
-        icon: 'attach_money', // ou 'fa-solid fa-money-bill'
-        description: 'Gerencie o salário da empresa.',
-        route: '/atron/salarios',
-        cols: 1,
-        rows: 1
-      },
-      {
-        code: 'PAC',
-        title: 'Perfil de Acessos',
-        icon: 'tune', // ou 'fa-solid fa-sliders'
-        description: 'Gerencie os perfis de acesso do sistema.',
-        route: '/atron/perfil-de-acesso',
-        cols: 1,
-        rows: 1
-      }
-    ];
-
-    // Em handset, todos 1x1; em desktop, 3 colunas de 1x1
-    return baseCards;
-
+    return this.cardsView;
   }
 
   trocarVisualizacao() {
@@ -109,8 +68,16 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/atron/home']);
   }
 
+  authToken: string = 'authToken'; // Define the authToken property
+  usuarioTempData: string = 'usuarioTempData'; // Define the usuarioTempData property
+
   logout() {
-    this.acessoService.logout();
-    this.router.navigate(['login']);
+    this.acessoService.logout().subscribe(() => {
+      localStorage.removeItem(this.authToken);
+      localStorage.removeItem(this.usuarioTempData);
+      this.acessoService.credentialUserSource.next(null);
+      this.acessoService.credentialUserSource.complete();
+      this.router.navigate(['/login']);
+    });
   }
 }

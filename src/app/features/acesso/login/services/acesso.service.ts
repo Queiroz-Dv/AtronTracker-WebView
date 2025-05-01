@@ -15,7 +15,7 @@ export class AcessoService {
   private readonly authToken = 'authToken';
   private readonly usuarioTempData = "usuarioTempData";
 
-  private credentialUserSource = new ReplaySubject<Login>(1); // Sempre que for alterado será verificado
+  public credentialUserSource = new ReplaySubject<Login>(1); // Sempre que for alterado será verificado
   public credentials$ = this.credentialUserSource.asObservable();
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -36,6 +36,20 @@ export class AcessoService {
     console.log("Autenticação preenchida com sucesso:", loginResult.dadosDoUsuario);
     // Emite os dados para os subscribers (caso algum componente esteja ouvindo)
     this.credentialUserSource.next(loginResult);
+  }
+
+  getModulosAcessiveisDoUsuario(): string[] | null {
+    const usuarioData = localStorage.getItem(this.usuarioTempData);
+
+    if (!usuarioData) return null;
+
+    try {
+      const usuarioDataObj = JSON.parse(usuarioData);
+      return usuarioDataObj?.modulosCodigo ?? null;
+    } catch (error) {
+      console.error('Erro ao converter os dados do usuário', error);
+      return null;
+    }
   }
 
   getDadosDoUsuario(): string | null {
@@ -67,11 +81,8 @@ export class AcessoService {
   }
 
 
-  logout(): void {
-    localStorage.removeItem(this.authToken);
-    this.credentialUserSource.next(null);
-    this.credentialUserSource.complete();
-    this.router.navigate(['/login']);
+  logout(): Observable<void> {
+    return this.http.get<void>(RotasApi.desconectarEndpoint);
   }
 
   obterUsuarioLogado(): Observable<DadosDoUsuario> {

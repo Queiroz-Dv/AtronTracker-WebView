@@ -1,5 +1,4 @@
 import { DepartamentoItem } from "../interfaces/departamento-item.interface";
-import { getDescricaoCompleta } from "../utils/departamento-utils";
 
 export class Departamento implements DepartamentoItem {
 
@@ -8,7 +7,11 @@ export class Departamento implements DepartamentoItem {
     public descricao: string
   ) { }
 
-  getDescricaoCompleta(): string {
-    return getDescricaoCompleta(this);
+  estaValido(): boolean {
+    return this.codigo != null && this.descricao != null;
+  }
+
+  toString() {
+    return this.codigo + " - " + this.descricao
   }
 }

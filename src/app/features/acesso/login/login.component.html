@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="form" (ngSubmit)="autenticar()" class="form-container">
+  <form [formGroup]="form" class="form-container">
     <h2 class="card-title">Gerenciador Atron</h2>
 
     <mat-card class="card-container">
@@ -14,8 +14,8 @@
         <c-control-error [control]="form.get('senha')"></c-control-error>
       </mat-form-field>
       <mat-card-actions class="card-actions">
-        <button mat-flat-button type="submit">Acessar</button>
-        <button mat-flat-button color="warn" [routerLink]="['/registrar']">Registre-se</button>
+        <button mat-flat-button type="submit" (click)="autenticar()">Acessar</button>
+        <button mat-flat-button color="warn" (click)="registrar()">Registre-se</button>
       </mat-card-actions>
     </mat-card>
   </form>

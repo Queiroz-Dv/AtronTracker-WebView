@@ -23,7 +23,6 @@ export class PerfilDeAcessoFormComponent implements OnInit {
   @ViewChild(MatTable) table!: MatTable<ModuloModel>;
   @Input() todosModulos: ModuloModel[] = [];
 
-
   dataSource = new MatTableDataSource<ModuloModel>([])
 
   columnsToDisplay = ['moduloCodigo', 'moduloDescricao',];
@@ -34,7 +33,6 @@ export class PerfilDeAcessoFormComponent implements OnInit {
   ngOnInit(): void {
     this.moduloService.obterTodos().subscribe(mods => {
       this.dataSource = new MatTableDataSource(mods)
-      //this.todosModulos = mods;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.table.dataSource = this.dataSource;

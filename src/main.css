@@ -59,6 +59,12 @@ fieldset legend {
   margin: 5% auto 0 auto; /* Centraliza horizontalmente */
 }
 
+.form-container-negative-top {
+  width: 50%;
+  margin-top: 0%;
+  margin-left: 25%;
+}
+
 .form-container {
   width: 50%;
   margin-top: 5%;

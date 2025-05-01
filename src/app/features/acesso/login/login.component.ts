@@ -71,4 +71,7 @@ export class LoginComponent implements OnInit {
     return modo === 'menu' ? '/atron/home' : '/atron/dashboard';
   }
 
+  registrar() {
+    this.router.navigate(['/registrar']);
+  }
 }
