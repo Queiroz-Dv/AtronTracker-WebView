@@ -17,7 +17,7 @@ import { VisualizacaoService } from '../../../core/services/visualizacao-service
 export class LoginComponent implements OnInit {
   form!: FormGroup;
   id?: number;
-
+  passwordType: string = 'password';
   constructor(
     private fb: FormBuilder,
     private loginService: AcessoService,
@@ -45,14 +45,20 @@ export class LoginComponent implements OnInit {
     }
     this.form = this.fb.group({
       codigo: ['', Validators.required],
-      senha: ['', Validators.required]
+      senha: ['', Validators.required],
+      lembrar: ['']
     });
+  }
+
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
 
   async autenticar() {
     let loginPayload = new LoginRequest();
     loginPayload.codigoDoUsuario = this.form.value.codigo;
     loginPayload.senha = this.form.value.senha;
+    loginPayload.lembrar = this.form.value.lembrar;
 
     this.loginService.autenticar(loginPayload).subscribe({
       next: () => {

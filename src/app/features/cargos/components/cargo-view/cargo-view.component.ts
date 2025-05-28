@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CargoService } from '../../services/cargo.service';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DepartamentosService } from '../../../departamentos/services/departamentos.service';
 import { SharedModule } from '../../../../shared/modules/shared.module';
 import { Departamento } from '../../../departamentos/models/departamento.model';
 import { CargoModel } from '../../models/cargo.model';
@@ -16,6 +15,7 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './cargo-view.component.html',
   imports: [ReactiveFormsModule, SharedModule, BotaoVoltarComponent],
 })
+
 export class CargosViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

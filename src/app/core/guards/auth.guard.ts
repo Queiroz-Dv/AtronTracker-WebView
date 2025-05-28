@@ -5,7 +5,7 @@ import { CanActivate, Router } from '@angular/router';
 export class AuthGuard implements CanActivate {
   constructor(private router: Router) { }
   canActivate(): boolean {
-    const token = JSON.parse(localStorage.getItem('authToken')).token;
+    const token = JSON.parse(localStorage.getItem('authToken'));
     if (!token) {
       console.log('Token não encontrado. Redirecionando para a página de login.');
       this.router.navigate(['/login']);

@@ -10,9 +10,16 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Senha</mat-label>
-        <input matInput type="password" formControlName="senha" />
+        <input matInput [type]="passwordType" formControlName="senha" />
+        <button (click)="togglePasswordVisibility()">
+          <mat-icon>visibility_off</mat-icon>
+        </button>
         <c-control-error [control]="form.get('senha')"></c-control-error>
-      </mat-form-field>
+      </mat-form-field>      
+      <!-- <mat-form-field>
+        <mat-label>Lembrar-se</mat-label>
+        <input matInput type="checkbox" formControlName="lembrar" />
+      </mat-form-field> -->
       <mat-card-actions class="card-actions">
         <button mat-flat-button type="submit" (click)="autenticar()">Acessar</button>
         <button mat-flat-button color="warn" (click)="registrar()">Registre-se</button>
