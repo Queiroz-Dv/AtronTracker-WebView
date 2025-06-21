@@ -2,9 +2,11 @@ import { environment } from "../../../environments/environment.development";
 
 export class RotasApi {
   public static readonly logarEndpoint: string = environment.apiRoute + 'api/AppLogin/Logar';
-  public static readonly desconectarEndpoint: string = environment.apiRoute + 'api/AppLogin/Desconectar';
-  public static readonly usuarioLogadoEndpoint: string = environment.apiRoute + 'api/AppLogin/UsuarioLogado';
   public static readonly registrarEndpoint: string = environment.apiRoute + 'api/AppRegister/Registrar';
+  public static readonly desconectarEndpoint: string = environment.apiRoute + 'api/AppLogin/Desconectar';
+  public static readonly sessionInfoEndpoint: string = environment.apiRoute + 'api/Sessao/Info';
+  public static readonly refreshTokenEndpoint: string = environment.apiRoute + 'api/AppLogin/RefreshToken';
+
   // Padrão comum dos endpoints das rotas de cada módulo
   public static readonly departamentoEndpoint: string = environment.apiRoute + 'api/Departamento';
   public static readonly cargoEndpoint: string = environment.apiRoute + 'api/Cargo';

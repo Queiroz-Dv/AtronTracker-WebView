@@ -8,8 +8,8 @@ import { MaterialContainerModule } from '../../material-container.module';
 import { SharedModule } from '../../shared/modules/shared.module';
 import { AcessoService } from '../acesso/login/services/acesso.service';
 import { VisualizacaoService } from '../../core/services/visualizacao-service';
-import { ModuloService } from '../modulos/services/modulo.service';
 import { ModuloItem } from '../../shared/utils/modulo-functions.util';
+import { ModuloModel } from '../modulos/interfaces/modulo.interface';
 
 @Component({
   standalone: true,
@@ -19,26 +19,30 @@ import { ModuloItem } from '../../shared/utils/modulo-functions.util';
   imports: [MaterialContainerModule, SharedModule, RouterModule]
 })
 export class DashboardComponent implements OnInit {
-  constructor(private router: Router, private moduloService: ModuloService, private acessoService: AcessoService, private visualizacaoService: VisualizacaoService) { }
+  cardsView: DashboardCard[] = [];
+
+  constructor(
+    private router: Router,    
+    private acessoService: AcessoService,
+    private visualizacaoService: VisualizacaoService) { }
 
   ngOnInit() {
-    this.moduloService.obterTodos().subscribe(modulos => {
-      const modulosAcessiveis = this.acessoService.getModulosAcessiveisDoUsuario();
-      this.cardsView = modulos
-        .filter(modulo => modulosAcessiveis.includes(modulo.codigo)) // Filter only accessible modules
-        .map(modulo => {
-          const moduloItem = new ModuloItem(modulo.codigo);
-          return {
-            code: modulo.codigo,
-            title: modulo.descricao,
-            icon: moduloItem.icone || 'default-icon', // Use utility function for icon
-            description: moduloItem.descricao || 'Descrição não disponível', // Provide a default description
-            route: moduloItem.rota, // Use utility function for route
-            cols: 1,
-            rows: 1
-          };
-        });
+    this.acessoService.modulosAcessiveis$.subscribe(modulos => {
+      this.cardsView = modulos.map(m => this.criarCard(m));
     });
+  }
+
+  private criarCard(m: ModuloModel): DashboardCard {
+    const item = new ModuloItem(m.codigo);
+    return {
+      code: m.codigo,
+      title: m.descricao,
+      icon: item.icone || 'default-icon',
+      description: item.descricao || 'Descrição não disponível',
+      route: item.rota,
+      cols: 1,
+      rows: 1
+    };
   }
 
   navigate(route: string) {
@@ -46,8 +50,6 @@ export class DashboardComponent implements OnInit {
   }
 
   private breakpointObserver = inject(BreakpointObserver);
-
-  cardsView: DashboardCard[] = [];
 
   setCardsForView() {
     this.cards.subscribe(cards => {
@@ -75,8 +77,6 @@ export class DashboardComponent implements OnInit {
     this.acessoService.logout().subscribe(() => {
       localStorage.removeItem(this.authToken);
       localStorage.removeItem(this.usuarioTempData);
-      this.acessoService.credentialUserSource.next(null);
-      this.acessoService.credentialUserSource.complete();
       this.router.navigate(['/login']);
     });
   }

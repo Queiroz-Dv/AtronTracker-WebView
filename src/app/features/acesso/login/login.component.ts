@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/modules/shared.module';
 import { ControlErrorComponent } from '../../../shared/components/control-error/control-error.component';
 import { LoginRequest } from '../../../shared/models/request/login-request.model';
 import { VisualizacaoService } from '../../../core/services/visualizacao-service';
+import { SessaoInfoService } from '../../../shared/services/sessaoInfo.service';
 
 @Component({
   standalone: true,
@@ -14,6 +15,7 @@ import { VisualizacaoService } from '../../../core/services/visualizacao-service
   templateUrl: './login.component.html',
   styleUrls: ['../acesso.component.css'],
 })
+
 export class LoginComponent implements OnInit {
   form!: FormGroup;
   id?: number;
@@ -21,32 +23,21 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private loginService: AcessoService,
+    private sessaoService: SessaoInfoService,
     public router: Router,
     public visualizacaoService: VisualizacaoService
   ) { }
 
   ngOnInit(): void {
-    const token = this.loginService.getToken();
-    const usuarioData = this.loginService.getDadosDoUsuario();
-
-    if (token != null || usuarioData != null) {
-      this.loginService.obterUsuarioLogado().subscribe({
-        next: (dados) => {
-          // Se quiser guardar novamente os dados:
-          localStorage.setItem('usuarioTempData', JSON.stringify(dados));
-          const rota = this.getRotaPorVisualizacao();
-          this.router.navigate([rota]);
-        },
-        error: () => {
-          console.log("Deslogando usuário por falta de informações para manter a sessão");
-          this.loginService.logout();// Token expirado ou inválido
-        }
-      });
+    var codigoDeUsuarioLogado = this.sessaoService.getUsuarioCodigoLocalStorage();
+    if (codigoDeUsuarioLogado) {
+     this.sessaoService.clearSessionInfo();
     }
+
     this.form = this.fb.group({
       codigo: ['', Validators.required],
       senha: ['', Validators.required],
-      lembrar: ['']
+      //lembrar: ['']
     });
   }
 
@@ -58,7 +49,7 @@ export class LoginComponent implements OnInit {
     let loginPayload = new LoginRequest();
     loginPayload.codigoDoUsuario = this.form.value.codigo;
     loginPayload.senha = this.form.value.senha;
-    loginPayload.lembrar = this.form.value.lembrar;
+    //loginPayload.lembrar = this.form.value.lembrar;
 
     this.loginService.autenticar(loginPayload).subscribe({
       next: () => {

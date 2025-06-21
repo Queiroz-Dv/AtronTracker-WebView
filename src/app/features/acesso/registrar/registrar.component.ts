@@ -49,11 +49,8 @@ export class RegistrarComponent implements OnInit {
 
     this.acessoService.registrar(dadosDoUsuario).subscribe({
       next: () => {
-        const token = this.acessoService.getToken(); // Chama o método para obter o token após o registro
-        if (token) {
-          console.log('Registro realizado com sucesso com token:', token);
-          this.router.navigate(['/atron/dashboard']);
-        }
+        console.log('Registro realizado com sucesso com token:');
+        this.router.navigate(['/atron/dashboard']);
       },
       error: (error) => {
         console.error('Registro falhou', error);

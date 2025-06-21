@@ -9,7 +9,5 @@ import { RotasApi } from '../../../shared/models/rotas-api.model';
 })
 export class ModuloService extends BaseService<ModuloModel> {
 
-  constructor(http: HttpClient) {
-    super(http, RotasApi.moduloEndpoint)
-  }
+  constructor(http: HttpClient) { super(http, RotasApi.moduloEndpoint) }
 }
