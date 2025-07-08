@@ -1,11 +1,10 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, filter, finalize, Observable, switchMap, take} from "rxjs";
+import { BehaviorSubject, filter, finalize, Observable, switchMap, take } from "rxjs";
 import { SessaoInfoService } from "../../shared/services/sessaoInfo.service";
 import { RotasApi } from "../../shared/models/rotas-api.model";
 
-export enum HeaderInfo
-{
+export enum HeaderInfo {
   refreshToken = 'XUSRRTK',
   usuarioCodigo = 'XUSRCD'
 }
@@ -23,14 +22,23 @@ export class AuthInterceptor implements HttpInterceptor {
 
     this.usuarioCodigo = this.sessaoService.getUsuarioCodigoLocalStorage();
 
-    if (req.url.startsWith(RotasApi.logarEndpoint)) {
+    if (req.url.startsWith(RotasApi.logarEndpoint) || req.url.startsWith(RotasApi.registrarEndpoint)) {
       this.sessaoService.clearSessionInfo();
       return next.handle(req);
     }
 
+    if (req.url.startsWith(RotasApi.desconectarEndpoint)) {
+      req = req.clone({
+        setHeaders: { [HeaderInfo.refreshToken]: 'false', [HeaderInfo.usuarioCodigo]: this.usuarioCodigo }
+      });
+
+      return next.handle(req); // Não fazer refresh se a própria requisição é pro logout
+    }
+
     if (req.url.endsWith(RotasApi.refreshTokenEndpoint)) {
       req = req.clone({
-        setHeaders: { [HeaderInfo.refreshToken]: 'true', [HeaderInfo.usuarioCodigo]: this.usuarioCodigo }});
+        setHeaders: { [HeaderInfo.refreshToken]: 'true', [HeaderInfo.usuarioCodigo]: this.usuarioCodigo }
+      });
       return next.handle(req); // Não fazer refresh se a própria requisição é pro refresh
     }
 

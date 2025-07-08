@@ -56,14 +56,14 @@ export class AcessoService {
     );
   }
 
-  registrar(dadosDoUsuario: RegistrarRequest) {
-    return this.http.post<Login>(RotasApi.registrarEndpoint, dadosDoUsuario).pipe(
-      map(logged => {
-        if (logged && logged.userToken && logged.dadosDoUsuario) {
-          // this.preencherAutenticacao(logged);
-        } else {
-          throw new Error('Resposta do registro incompleta.');
-        }
+  registrar(dadosDoUsuario: RegistrarRequest) : Observable<boolean> {
+    return this.http.post<{registrado: boolean}>(RotasApi.registrarEndpoint, dadosDoUsuario).pipe(
+      map((response) => {        
+        return response.registrado; // Retorne true se o registro for bem-sucedido
+      }),
+      catchError((error) => {
+        console.error('Erro ao registrar usuário:', error);
+        return throwError(() => error); // Propague o erro para o consumidor
       })
     );
   }

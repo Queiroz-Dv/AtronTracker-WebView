@@ -48,13 +48,18 @@ export class RegistrarComponent implements OnInit {
       this.form.value.dataNascimento);
 
     this.acessoService.registrar(dadosDoUsuario).subscribe({
-      next: () => {
-        console.log('Registro realizado com sucesso com token:');
-        this.router.navigate(['/atron/dashboard']);
+      next: (registrado: boolean) => {
+        if (registrado) {
+          console.log('Usuário registrado com sucesso!');
+          this.router.navigate(['/login']);
+        } else {
+          console.error('Falha ao registrar usuário.');
+        }
       },
-      error: (error) => {
-        console.error('Registro falhou', error);
+      error: (error: any) => {
+        console.error('Erro ao registrar usuário:', error);
+        // Aqui você pode exibir uma mensagem de erro para o usuário, se necessário
       }
-    });
+    })
   }
 }

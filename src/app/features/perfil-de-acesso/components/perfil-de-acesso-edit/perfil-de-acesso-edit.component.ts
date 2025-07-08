@@ -74,9 +74,14 @@ export class PerfilDeAcessoEditComponent implements OnInit {
     };
 
     const codigoDaUrl = this.route.snapshot.paramMap.get('codigo');
-    if (this.codigo !== codigoDaUrl) { this.codigo = codigoDaUrl; }
 
-    if (codigoDaUrl !== perfilPayload.codigo) { perfilPayload.codigo = codigoDaUrl; }
+    if (this.codigo !== codigoDaUrl) {
+      this.codigo = codigoDaUrl;
+    }
+
+    if (codigoDaUrl !== perfilPayload.codigo && !perfilPayload.codigo) {
+      perfilPayload.codigo = codigoDaUrl;
+    }
 
     const operacao = this.codigo
       ? this.service.atualizar(this.codigo, perfilPayload)
