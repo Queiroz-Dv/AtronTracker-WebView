@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
           console.warn('Usuário sem módulos de acesso válidos. Redirecionando para o login.');
           this.router.navigate(['/login']);
         }
-
+      
         return isAuthenticated;
       }),
       catchError((error) => {

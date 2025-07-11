@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   cardsView: DashboardCard[] = [];
 
   constructor(
-    private router: Router,    
+    private router: Router,
     private acessoService: AcessoService,
     private visualizacaoService: VisualizacaoService) { }
 
@@ -74,10 +74,12 @@ export class DashboardComponent implements OnInit {
   usuarioTempData: string = 'usuarioTempData'; // Define the usuarioTempData property
 
   logout() {
-    this.acessoService.logout().subscribe(() => {
-      localStorage.removeItem(this.authToken);
-      localStorage.removeItem(this.usuarioTempData);
-      this.router.navigate(['/login']);
+    this.acessoService.logout().subscribe((retorno) => {     
+        // Aqui você obtém o valor de retorno do método logout
+        console.log('Retorno do logout:', retorno);
+        localStorage.removeItem(this.authToken);
+        localStorage.removeItem(this.usuarioTempData);
+        this.router.navigate(['/login']);
     });
   }
 }
