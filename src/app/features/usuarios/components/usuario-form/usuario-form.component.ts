@@ -6,6 +6,7 @@ import { DepartamentosService } from '../../../departamentos/services/departamen
 import { SharedModule } from '../../../../shared/modules/shared.module';
 import { Departamento } from '../../../departamentos/models/departamento.model';
 import { CargoModel } from '../../../cargos/models/cargo.model';
+import { CargoResponse } from '../../../cargos/models/response/cargo-response.model';
 
 @Component({
   selector: 'c-usuario-form',
@@ -18,15 +19,15 @@ export class UsuarioFormComponent implements OnInit {
 
   // Controles individuais para autocomplete
   departamentoControl = new FormControl<string | Departamento>('');
-  cargoControl = new FormControl<string | CargoModel>('');
+  cargoControl = new FormControl<string | CargoResponse | CargoModel>('');
 
   // Dados para os selects
   departamentos: Departamento[] = [];
-  cargos: CargoModel[] = [];
+  cargos: CargoResponse[] = [];
 
   // Backup dos dados originais
   todosDepartamentos: Departamento[] = [];
-  todosCargos: CargoModel[] = [];
+  todosCargos: CargoResponse[] = [];
 
   constructor(
     private cargoService: CargoService,

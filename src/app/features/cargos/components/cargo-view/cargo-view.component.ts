@@ -9,6 +9,7 @@ import { Departamento } from '../../../departamentos/models/departamento.model';
 import { CargoModel } from '../../models/cargo.model';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
 import { MatSort } from '@angular/material/sort';
+import { CargoResponse } from '../../models/response/cargo-response.model';
 
 @Component({
   selector: 'c-cargos-view',
@@ -19,7 +20,7 @@ import { MatSort } from '@angular/material/sort';
 export class CargosViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  dataSource: MatTableDataSource<CargoModel>;
+  dataSource: MatTableDataSource<CargoResponse>;
 
   route = inject(ActivatedRoute);
   departamentos: Departamento[] = [];

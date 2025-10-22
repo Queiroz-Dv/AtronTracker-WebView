@@ -1,4 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+/* Adicione estas classes para estilizar o snackbar */
+.snackbar-sucesso { /* Nome da classe alterado */
+  background-color: #4CAF50; /* Verde */
+  color: white;
+}
+
+.snackbar-erro { /* Nome da classe alterado */
+  background-color: #f44336; /* Vermelho */
+  color: white;
+}
+
+.snackbar-aviso { /* Nome da classe alterado */
+  background-color: #ff9800; /* Laranja */
+  color: black;
+}
+
+.snackbar-info { /* Nome da classe alterado */
+  background-color: #2196F3; /* Azul */
+  color: white;
+}
+
+/* Ajustes opcionais para garantir que o botão fechar seja visível */
+.snackbar-sucesso button,
+.snackbar-erro button,
+.snackbar-aviso button,
+.snackbar-info button {
+  color: inherit !important; /* Herda a cor do texto do snackbar */
+  opacity: 0.8;
+}
+
+/* ... (restante do seu CSS global) */
 
 html,
 body {

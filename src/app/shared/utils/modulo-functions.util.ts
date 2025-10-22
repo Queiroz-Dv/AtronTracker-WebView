@@ -20,7 +20,7 @@ const MODULOS_CONFIG: Record<string, ModuloConfig> = {
     rota: '/atron/usuarios',
     descricao: 'Gerencie os colaboradores da empresa.'
   },
-  TAR: {
+  TRF: {
     icone: 'checklist',
     rota: '/atron/tarefas',
     descricao: 'Gerencie as tarefas da empresa.'
@@ -30,7 +30,7 @@ const MODULOS_CONFIG: Record<string, ModuloConfig> = {
     rota: '/atron/salarios',
     descricao: 'Gerencie o salário da empresa.'
   },
-  PERF: {
+  PRF: {
     icone: 'tune',
     rota: '/atron/perfil-de-acesso',
     descricao: 'Gerencie os perfis de acesso do sistema.'
