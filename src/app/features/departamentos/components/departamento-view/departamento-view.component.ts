@@ -8,10 +8,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../shared/modules/shared.module';
 import { Departamento } from '../../models/departamento.model';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
-import { MatDialog } from '@angular/material/dialog'; 
-import { ConfirmacaoDialogComponent, ConfirmacaoDialogData } from '../../../../shared/components/confirmacao-dialog/confirmacao-dialog.component'; 
-import { filter, switchMap } from 'rxjs/operators'; 
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmacaoDialogComponent, ConfirmacaoDialogData } from '../../../../shared/components/confirmacao-dialog/confirmacao-dialog.component';
+import { filter, switchMap } from 'rxjs/operators';
 import { NotificacaoService, Mensagem, Nivel } from '../../../../core/services/notification.service';
+import { ConfirmacaoExecucaoParams, ConfirmacaoService } from '../../../../shared/services/confirmacao.service';
 
 @Component({
   selector: 'c-departamento-view',
@@ -25,20 +26,17 @@ export class DepartamentoViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  dataSource: MatTableDataSource<Departamento> = new MatTableDataSource(); 
+  dataSource: MatTableDataSource<Departamento> = new MatTableDataSource();
   route = inject(ActivatedRoute);
   colunas = ['codigo', 'descricao', 'acoes'];
 
   constructor(
-private service: DepartamentosService, 
-public router: Router,
-private dialog: MatDialog, 
-private notificacaoService: NotificacaoService
-) { }
+    private service: DepartamentosService,
+    public router: Router,
+    private confirmacaoService: ConfirmacaoService
+  ) { }
 
-  ngAfterViewInit() {
-    this.carregar();
-  }
+  ngAfterViewInit() { this.carregar(); }
 
   carregar() {
     this.service.obterTodos().subscribe(entidades => {
@@ -60,38 +58,23 @@ private notificacaoService: NotificacaoService
   editar(codigo: string): void {
     this.router.navigate(['atron/departamentos/editar', codigo]);
   }
- 
-  excluir(codigo: string): void {    
+
+  excluir(codigo: string): void {
     const departamento = this.dataSource.data.find(d => d.codigo === codigo);
     const nomeDepartamento = departamento ? `${departamento.codigo} - ${departamento.descricao}` : `o registro ${codigo}`;
-
-    const dialogData: ConfirmacaoDialogData = {
+  
+    // 2. Definir os parâmetros para o serviço de confirmação
+    const params: ConfirmacaoExecucaoParams = {
       titulo: 'Confirmar Exclusão',
       mensagem: `Tem certeza que deseja excluir ${nomeDepartamento}?`,
-      textoBotaoConfirmar: 'Excluir',
-      textoBotaoCancelar: 'Cancelar'
+      // Passa a "operação" (o Observable) que deve ser executada
+      operacao$: this.service.deletar(codigo),
+      // Passa o "callback" (a função) que deve rodar em caso de sucesso
+      // Usamos uma arrow function para manter o contexto do 'this'
+      onSuccess: () => this.carregar() 
     };
 
-    const dialogRef = this.dialog.open(ConfirmacaoDialogComponent, {
-      width: '500px', 
-      data: dialogData
-    });
-
-    dialogRef.afterClosed().pipe(
-      filter(resultado => resultado === true),      
-      switchMap(() => this.service.deletar(codigo))
-    ).subscribe({
-      next: (resposta: Mensagem[]) => {
-        this.notificacaoService.exibirMensagens(resposta);
-        this.carregar(); 
-      },
-      error: (erro: any) => {           
-        if (erro && erro.mensagensApi) {
-          this.notificacaoService.exibirMensagens(erro.mensagensApi);
-        } else {
-          this.notificacaoService.exibirMensagem('Ocorreu um erro ao tentar excluir o registro.', Nivel.Error);
-        }
-      }
-    });
+    // 3. Chamar o serviço. É só isso!
+    this.confirmacaoService.confirmarEExecutar(params);
   }
 }

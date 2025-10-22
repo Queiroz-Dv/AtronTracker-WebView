@@ -10,6 +10,10 @@ import { CargoModel } from '../../models/cargo.model';
 import { BotaoVoltarComponent } from "../../../../core/layout/botao-voltar/botao-voltar.component";
 import { MatSort } from '@angular/material/sort';
 import { CargoResponse } from '../../models/response/cargo-response.model';
+import { MatDialog } from '@angular/material/dialog';
+import { Mensagem, Nivel, NotificacaoService } from '../../../../core/services/notification.service';
+import { ConfirmacaoDialogComponent, ConfirmacaoDialogData } from '../../../../shared/components/confirmacao-dialog/confirmacao-dialog.component';
+import { filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'c-cargos-view',
@@ -20,13 +24,16 @@ import { CargoResponse } from '../../models/response/cargo-response.model';
 export class CargosViewComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  dataSource: MatTableDataSource<CargoResponse>;
+  dataSource: MatTableDataSource<CargoResponse> = new MatTableDataSource();
 
   route = inject(ActivatedRoute);
   departamentos: Departamento[] = [];
   colunas = ['codigo', 'descricao', 'departamento', 'acoes'];
 
-  constructor(private cargoService: CargoService,
+  constructor(
+    private service: CargoService,
+    private dialog: MatDialog,
+    private notificacaoService: NotificacaoService,
     public router: Router) { }
 
   ngAfterViewInit(): void {
@@ -43,8 +50,8 @@ export class CargosViewComponent implements AfterViewInit {
   }
 
   carregar() {
-    this.cargoService.obterTodos().subscribe(crg => {
-      this.dataSource = new MatTableDataSource(crg);
+    this.service.obterTodos().subscribe(crg => {
+      this.dataSource.data = crg;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -55,8 +62,37 @@ export class CargosViewComponent implements AfterViewInit {
   }
 
   excluir(codigo: string): void {
-    if (confirm('Deseja realmente excluir?')) {
-      this.cargoService.deletar(codigo).subscribe(() => this.carregar());
-    }
+    const cargo = this.dataSource.data.find(d => d.codigo === codigo);
+    const nomeCargo = cargo ? `${cargo.codigo} - ${cargo.descricao}` : `o registro ${codigo}`;
+
+    const dialogData: ConfirmacaoDialogData = {
+      titulo: 'Confirmar Exclusão',
+      mensagem: `Tem certeza que deseja excluir ${nomeCargo}?`,
+      textoBotaoConfirmar: 'Excluir',
+      textoBotaoCancelar: 'Cancelar'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmacaoDialogComponent, {
+      width: '500px',
+      data: dialogData
+    });
+
+
+    dialogRef.afterClosed().pipe(
+      filter(resultado => resultado === true),
+      switchMap(() => this.service.deletar(codigo))
+    ).subscribe({
+      next: (resposta: Mensagem[]) => {
+        this.notificacaoService.exibirMensagens(resposta);
+        this.carregar();
+      },
+      error: (erro: any) => {
+        if (erro && erro.mensagensApi) {
+          this.notificacaoService.exibirMensagens(erro.mensagensApi);
+        } else {
+          this.notificacaoService.exibirMensagem('Ocorreu um erro ao tentar excluir o registro.', Nivel.Error);
+        }
+      }
+    });
   }
 }

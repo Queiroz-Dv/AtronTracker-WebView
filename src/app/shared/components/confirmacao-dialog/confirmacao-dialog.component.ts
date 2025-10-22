@@ -1,24 +1,19 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule } from '@angular/common';
 
-// Interface para os dados que o diálogo receberá
 export interface ConfirmacaoDialogData {
   titulo: string;
   mensagem: string;
-  textoBotaoConfirmar?: string; // Opcional
-  textoBotaoCancelar?: string; // Opcional
+  textoBotaoConfirmar?: string;
+  textoBotaoCancelar?: string;
 }
 
 @Component({
   selector: 'app-confirmacao-dialog',
   standalone: true,
-  imports: [
-    CommonModule, // Adicionar CommonModule
-    MatDialogModule,
-    MatButtonModule
-  ],
+  imports: [CommonModule, MatDialogModule, MatButtonModule],
   templateUrl: './confirmacao-dialog.component.html',
 })
 export class ConfirmacaoDialogComponent {
@@ -27,7 +22,7 @@ export class ConfirmacaoDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmacaoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmacaoDialogData
-  ) {}
+  ) { }
 
   // Fecha o diálogo retornando 'false' (cancelou)
   onCancelarClick(): void {
